@@ -37,6 +37,10 @@ class EmployesController extends Controller
             abort(403, 'Unauthorized');
         }
 
+        if (!canAddEmployee()) {
+            return redirect()->route('user.plans')->with('error', 'You have reached your employee limit. Please upgrade your plan.');
+        }
+
         $role = Role::get();
         return view('employess.create', compact('role'));
     }
@@ -48,6 +52,10 @@ class EmployesController extends Controller
     {
         if (!Auth::user()->isAbleTo('create-employees')) {
             abort(403, 'Unauthorized');
+        }
+
+        if (!canAddEmployee()) {
+            return redirect()->route('user.plans')->with('error', 'You have reached your employee limit. Please upgrade your plan.');
         }
 
         $request->validate([

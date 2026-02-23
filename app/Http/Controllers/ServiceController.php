@@ -16,7 +16,7 @@ class ServiceController extends Controller
         if (!Auth::user()->isAbleTo('create-service')) {
             abort(403, 'Unauthorized');
         }
-        $service = Service::get();
+        $service = Service::where('create_id', createid())->get();
         return view('service.index', compact('service'));
     }
 
@@ -25,6 +25,9 @@ class ServiceController extends Controller
      */
     public function create()
     {
+        if (!canAddService()) {
+            return redirect()->route('user.plans')->with('error', 'You have reached your service limit. Please upgrade your plan.');
+        }
         return view('service.create');
     }
 
@@ -33,6 +36,10 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
+        if (!canAddService()) {
+            return redirect()->route('user.plans')->with('error', 'You have reached your service limit. Please upgrade your plan.');
+        }
+
         $request->validate([
             'name' => 'required',
             'price' => 'required|numeric',
@@ -51,6 +58,7 @@ class ServiceController extends Controller
             'status' => $request->status,
             'description' => $request->description,
             'image' => $image,
+            'create_id' => createid(),
         ]);
 
         return redirect()->route('service.index')->with('success', 'Create successfully');

@@ -44,18 +44,6 @@
                                         id="stripe_secret" name="stripe_secret" type="password"
                                         value="{{ $settings->where('key', 'stripe_secret')->first()->value ?? '' }}">
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="stripe_webhook_secret" class="form-label">Stripe Webhook Secret</label>
-                                    <input class="form-control" placeholder="Enter Stripe Webhook Secret"
-                                        id="stripe_webhook_secret" name="stripe_webhook_secret" type="password"
-                                        value="{{ $settings->where('key', 'stripe_webhook_secret')->first()->value ?? '' }}">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="stripe_currency" class="form-label">Currency</label>
-                                    <input class="form-control" placeholder="Enter Currency (e.g., USD)" required="required"
-                                        id="stripe_currency" name="stripe_currency" type="text"
-                                        value="{{ $settings->where('key', 'stripe_currency')->first()->value ?? 'USD' }}">
-                                </div>
                             </div>
                         </div>
 

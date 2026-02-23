@@ -39,10 +39,11 @@
                                     <thead>
                                         <tr>
                                             <th>{{ __('Name') }}</th>
+                                            <th>{{ __('Type') }}</th>
+                                            <th>{{ __('Amount') }}</th>
+                                            <th>{{ __('Duration') }}</th>
                                             <th>{{ __('Max Employees') }}</th>
-                                            <th>{{ __('Storage Limit') }}</th>
-                                            <th>{{ __('Price Monthly') }}</th>
-                                            <th>{{ __('Price Yearly') }}</th>
+                                            <th>{{ __('Max Services') }}</th>
                                             <th>{{ __('Status') }}</th>
                                             <th>{{ __('Action') }}</th>
                                         </tr>
@@ -51,10 +52,11 @@
                                         @foreach ($plans as $plan)
                                             <tr>
                                                 <td>{{ $plan->name }}</td>
+                                                <td><span class="badge bg-{{ $plan->type == 'free' ? 'success' : 'primary' }}">{{ ucfirst($plan->type) }}</span></td>
+                                                <td>{{ $plan->type == 'paid' ? '$' . number_format($plan->amount, 2) : 'Free' }}</td>
+                                                <td>{{ ucfirst(str_replace('_', ' ', $plan->duration)) }}</td>
                                                 <td>{{ $plan->max_employees }}</td>
-                                                <td>{{ $plan->storage_limit }}</td>
-                                                <td>${{ number_format($plan->price_monthly, 2) }}</td>
-                                                <td>${{ number_format($plan->price_yearly, 2) }}</td>
+                                                <td>{{ $plan->max_services }}</td>
                                                 <td>
                                                     <span class="badge bg-{{ $plan->is_active ? 'success' : 'danger' }}">
                                                         {{ $plan->is_active ? 'Active' : 'Inactive' }}

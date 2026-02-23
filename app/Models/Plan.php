@@ -6,10 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Plan extends Model
 {
-    protected $fillable = ['name', 'max_employees', 'storage_limit', 'price_monthly', 'price_yearly', 'is_active'];
+    protected $fillable = ['name', 'description', 'type', 'amount', 'duration', 'max_employees', 'max_services', 'is_active'];
 
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(PlanSubscription::class);
     }
 }

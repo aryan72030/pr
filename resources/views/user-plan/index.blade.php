@@ -25,7 +25,10 @@
 
             @if($currentPlan)
                 <div class="alert alert-info">
-                    <strong>Current Plan:</strong> {{ $currentPlan->name }} - {{ $currentPlan->max_employees }} Employees - {{ $currentPlan->storage_limit }}
+                    <strong>Current Plan:</strong> {{ $currentPlan->name }} - {{ $currentPlan->max_employees }} Employees - {{ $currentPlan->max_services }} Services
+                    @if(Auth::user()->plan_expiry_date)
+                        <br><strong>Expires on:</strong> {{ Auth::user()->plan_expiry_date->format('d M Y') }}
+                    @endif
                 </div>
             @endif
 
@@ -35,14 +38,26 @@
                         <div class="card {{ $currentPlan && $currentPlan->id == $plan->id ? 'border-primary' : '' }}">
                             <div class="card-header text-center">
                                 <h4>{{ $plan->name }}</h4>
+                                @if($plan->type == 'free')
+                                    <span class="badge bg-success">Free</span>
+                                @else
+                                    <span class="badge bg-primary">Paid</span>
+                                @endif
                             </div>
                             <div class="card-body text-center">
-                                <h2 class="mb-3">${{ number_format($plan->price_monthly, 2) }}<small>/month</small></h2>
-                                <h5 class="text-muted">${{ number_format($plan->price_yearly, 2) }}/year</h5>
+                                @if($plan->type == 'paid')
+                                    <h2 class="mb-3">${{ number_format($plan->amount, 2) }}</h2>
+                                @else
+                                    <h2 class="mb-3">Free</h2>
+                                @endif
+                                <p class="text-muted">{{ ucfirst(str_replace('_', ' ', $plan->duration)) }}</p>
                                 <hr>
+                                @if($plan->description)
+                                    <p>{{ $plan->description }}</p>
+                                @endif
                                 <ul class="list-unstyled">
                                     <li class="mb-2"><i class="ti ti-check text-success"></i> {{ $plan->max_employees }} Employees</li>
-                                    <li class="mb-2"><i class="ti ti-check text-success"></i> {{ $plan->storage_limit }} Storage</li>
+                                    <li class="mb-2"><i class="ti ti-check text-success"></i> {{ $plan->max_services }} Services</li>
                                 </ul>
                                 @if($currentPlan && $currentPlan->id == $plan->id)
                                     <button class="btn btn-success" disabled>Current Plan</button>
@@ -56,6 +71,10 @@
                         </div>
                     </div>
                 @endforeach
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="{{ route('user.plan.history') }}" class="btn btn-secondary">View Subscription History</a>
             </div>
         </div>
     </section>

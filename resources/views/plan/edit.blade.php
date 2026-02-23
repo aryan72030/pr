@@ -35,24 +35,42 @@
                                 @method('PUT')
                                 <div class="row">
                                     <div class="form-group col-md-6">
-                                        <label class="form-label">{{ __('Plan Name') }}</label>
+                                        <label class="form-label">{{ __('Title') }}</label>
                                         <input type="text" name="name" class="form-control" value="{{ $plan->name }}" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label">{{ __('Duration') }}</label>
+                                        <select name="duration" class="form-control" required>
+                                            <option value="monthly" {{ $plan->duration == 'monthly' ? 'selected' : '' }}>Monthly</option>
+                                            <option value="quarterly" {{ $plan->duration == 'quarterly' ? 'selected' : '' }}>Quarterly</option>
+                                            <option value="half_yearly" {{ $plan->duration == 'half_yearly' ? 'selected' : '' }}>Half Yearly</option>
+                                            <option value="yearly" {{ $plan->duration == 'yearly' ? 'selected' : '' }}>Yearly</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label class="form-label">{{ __('Description') }}</label>
+                                        <textarea name="description" class="form-control" rows="3">{{ $plan->description }}</textarea>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label">{{ __('Type') }}</label>
+                                        <div>
+                                            <input type="radio" name="type" value="free" id="free" {{ $plan->type == 'free' ? 'checked' : '' }} onchange="toggleAmount()">
+                                            <label for="free">Free</label>
+                                            <input type="radio" name="type" value="paid" id="paid" class="ms-3" {{ $plan->type == 'paid' ? 'checked' : '' }} onchange="toggleAmount()">
+                                            <label for="paid">Paid</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6" id="amountField" style="display: {{ $plan->type == 'paid' ? 'block' : 'none' }}">
+                                        <label class="form-label">{{ __('Amount') }}</label>
+                                        <input type="number" step="0.01" name="amount" class="form-control" value="{{ $plan->amount }}">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label class="form-label">{{ __('Max Employees') }}</label>
                                         <input type="number" name="max_employees" class="form-control" value="{{ $plan->max_employees }}" required>
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label class="form-label">{{ __('Storage Limit') }}</label>
-                                        <input type="text" name="storage_limit" class="form-control" value="{{ $plan->storage_limit }}" required>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label class="form-label">{{ __('Price Monthly') }}</label>
-                                        <input type="number" step="0.01" name="price_monthly" class="form-control" value="{{ $plan->price_monthly }}" required>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label class="form-label">{{ __('Price Yearly') }}</label>
-                                        <input type="number" step="0.01" name="price_yearly" class="form-control" value="{{ $plan->price_yearly }}" required>
+                                        <label class="form-label">{{ __('Max Services') }}</label>
+                                        <input type="number" name="max_services" class="form-control" value="{{ $plan->max_services }}" required>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label class="form-label">{{ __('Status') }}</label>
@@ -73,4 +91,21 @@
             </div>
         </div>
     </section>
+
+    <script>
+        function toggleAmount() {
+            const type = document.querySelector('input[name="type"]:checked').value;
+            const amountField = document.getElementById('amountField');
+            const amountInput = document.querySelector('input[name="amount"]');
+            
+            if (type === 'free') {
+                amountField.style.display = 'none';
+                amountInput.removeAttribute('required');
+                amountInput.value = '';
+            } else {
+                amountField.style.display = 'block';
+                amountInput.setAttribute('required', 'required');
+            }
+        }
+    </script>
 @endsection

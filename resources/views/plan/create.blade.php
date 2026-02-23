@@ -34,24 +34,42 @@
                                 @csrf
                                 <div class="row">
                                     <div class="form-group col-md-6">
-                                        <label class="form-label">{{ __('Plan Name') }}</label>
-                                        <input type="text" name="name" class="form-control" placeholder="Enter plan name" required>
+                                        <label class="form-label">{{ __('Title') }}</label>
+                                        <input type="text" name="name" class="form-control" placeholder="Enter plan title" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label">{{ __('Duration') }}</label>
+                                        <select name="duration" class="form-control" required>
+                                            <option value="monthly">Monthly</option>
+                                            <option value="quarterly">Quarterly</option>
+                                            <option value="half_yearly">Half Yearly</option>
+                                            <option value="yearly">Yearly</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label class="form-label">{{ __('Description') }}</label>
+                                        <textarea name="description" class="form-control" rows="3" placeholder="Enter description"></textarea>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label">{{ __('Type') }}</label>
+                                        <div>
+                                            <input type="radio" name="type" value="free" id="free" onchange="toggleAmount()">
+                                            <label for="free">Free</label>
+                                            <input type="radio" name="type" value="paid" id="paid" class="ms-3" checked onchange="toggleAmount()">
+                                            <label for="paid">Paid</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6" id="amountField">
+                                        <label class="form-label">{{ __('Amount') }}</label>
+                                        <input type="number" step="0.01" name="amount" class="form-control" placeholder="Enter amount">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label class="form-label">{{ __('Max Employees') }}</label>
                                         <input type="number" name="max_employees" class="form-control" placeholder="Enter max employees" required>
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label class="form-label">{{ __('Storage Limit') }}</label>
-                                        <input type="text" name="storage_limit" class="form-control" placeholder="e.g., 10GB" required>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label class="form-label">{{ __('Price Monthly') }}</label>
-                                        <input type="number" step="0.01" name="price_monthly" class="form-control" placeholder="Enter monthly price" required>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label class="form-label">{{ __('Price Yearly') }}</label>
-                                        <input type="number" step="0.01" name="price_yearly" class="form-control" placeholder="Enter yearly price" required>
+                                        <label class="form-label">{{ __('Max Services') }}</label>
+                                        <input type="number" name="max_services" class="form-control" placeholder="Enter max services" required>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label class="form-label">{{ __('Status') }}</label>
@@ -72,4 +90,21 @@
             </div>
         </div>
     </section>
+
+    <script>
+        function toggleAmount() {
+            const type = document.querySelector('input[name="type"]:checked').value;
+            const amountField = document.getElementById('amountField');
+            const amountInput = document.querySelector('input[name="amount"]');
+            
+            if (type === 'free') {
+                amountField.style.display = 'none';
+                amountInput.removeAttribute('required');
+                amountInput.value = '';
+            } else {
+                amountField.style.display = 'block';
+                amountInput.setAttribute('required', 'required');
+            }
+        }
+    </script>
 @endsection

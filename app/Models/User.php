@@ -27,11 +27,28 @@ class User extends Authenticatable implements LaratrustUser
         'role',
         'create_id',
         'plan_id',
+        'plan_expiry_date',
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'plan_expiry_date' => 'date',
     ];
 
     public function plan()
     {
         return $this->belongsTo(Plan::class);
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(PlanSubscription::class);
+    }
+
+    public function isPlanExpired()
+    {
+        return $this->plan_expiry_date && $this->plan_expiry_date->isPast();
     }
 
     public function availability()

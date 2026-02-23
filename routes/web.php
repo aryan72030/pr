@@ -20,33 +20,29 @@ Route::get('/', function () {
 
 Route::get('/dashboard',[DashboardController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'check.plan.expiry'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('employes',EmployesController::class);
-
     Route::resource('role',RoleController::class);
-
     Route::resource('blog',BlogController::class);
-
     Route::resource('service',ServiceController::class);
-
-
     Route::resource('staffAvailability',StaffAvailabilityController::class);
-
     Route::resource('appointment',AppointmentController::class);
- 
     Route::resource('plan',PlanController::class);
-
-    Route::get('user/plans', [UserPlanController::class, 'index'])->name('user.plans');
-    Route::post('user/plan/subscribe/{planId}', [UserPlanController::class, 'subscribe'])->name('user.plan.subscribe');
-
     Route::resource('email',SettingEmailController::class);
-
     Route::resource('stripe',SettingStripeController::class);
+});
 
+Route::middleware('auth')->group(function () {
+    Route::get('user/plans', [UserPlanController::class, 'index'])->name('user.plans');
+    Route::get('user/plan/subscribe/{planId}', [UserPlanController::class, 'subscribe'])->name('user.plan.subscribe');
+    Route::post('user/plan/subscribe/{planId}', [UserPlanController::class, 'subscribe']);
+    Route::post('user/plan/payment/{planId}', [UserPlanController::class, 'processPayment'])->name('user.plan.payment');
+    Route::get('user/plan/history', [UserPlanController::class, 'history'])->name('user.plan.history');
+    Route::get('user/plan/invoice/{subscriptionId}', [UserPlanController::class, 'invoice'])->name('user.plan.invoice');
 });
 
 require __DIR__.'/auth.php';

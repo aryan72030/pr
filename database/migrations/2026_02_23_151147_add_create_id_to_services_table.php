@@ -11,21 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('settings', function (Blueprint $table) {
-            $table->id();
-            $table->string('key');
-            $table->string('value')->nullable();
-            $table->unsignedBigInteger('create_id');
+        Schema::table('services', function (Blueprint $table) {
+            $table->unsignedBigInteger('create_id')->nullable()->after('id');
             $table->foreign('create_id')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('settings');
+        Schema::table('services', function (Blueprint $table) {
+            $table->dropForeign(['create_id']);
+            $table->dropColumn('create_id');
+        });
     }
 };

@@ -56,6 +56,7 @@ function canAddEmployee()
 {
     $user = Auth::user();
     if (!$user->plan) return false;
+    if ($user->isPlanExpired()) return false;
     
     $employeeCount = User::where('create_id', $user->id)->count();
     return $employeeCount < $user->plan->max_employees;
@@ -68,4 +69,14 @@ function getRemainingEmployeeSlots()
     
     $employeeCount = User::where('create_id', $user->id)->count();
     return max(0, $user->plan->max_employees - $employeeCount);
+}
+
+function canAddService()
+{
+    $user = Auth::user();
+    if (!$user->plan) return false;
+    if ($user->isPlanExpired()) return false;
+    
+    $serviceCount = \App\Models\Service::where('create_id', createid())->count();
+    return $serviceCount < $user->plan->max_services;
 }

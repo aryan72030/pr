@@ -24,6 +24,62 @@
             </div>
         </div>
         <!-- [ breadcrumb ] end -->
+        
+        @if(Auth::user()->plan)
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="card {{ Auth::user()->isPlanExpired() ? 'border-danger' : 'border-primary' }}">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h5 class="mb-2"><i class="ti ti-package"></i> Current Plan: <strong>{{ Auth::user()->plan->name }}</strong></h5>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <small class="text-muted">Employees:</small>
+                                            <h6>{{ getRemainingEmployeeSlots() }} / {{ Auth::user()->plan->max_employees }} remaining</h6>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <small class="text-muted">Services:</small>
+                                            <h6>{{ Auth::user()->plan->max_services }} allowed</h6>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <small class="text-muted">Expires:</small>
+                                            <h6 class="{{ Auth::user()->isPlanExpired() ? 'text-danger' : '' }}">
+                                                {{ Auth::user()->plan_expiry_date ? Auth::user()->plan_expiry_date->format('d M Y') : 'N/A' }}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                    @if(Auth::user()->isPlanExpired())
+                                        <span class="badge bg-danger">Plan Expired!</span>
+                                    @endif
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <a href="{{ route('user.plans') }}" class="btn btn-primary">
+                                        <i class="ti ti-arrow-up-circle"></i> {{ Auth::user()->isPlanExpired() ? 'Renew Plan' : 'Upgrade Plan' }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="alert alert-warning">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5><i class="ti ti-alert-circle"></i> No Active Plan</h5>
+                                <p class="mb-0">Subscribe to a plan to start adding employees and services.</p>
+                            </div>
+                            <a href="{{ route('user.plans') }}" class="btn btn-primary">Choose a Plan</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+        
+        <!-- [ breadcrumb ] end -->
         <!-- [ Main Content ] start -->
         <div class="row">
             <!-- [ sample-page ] start -->

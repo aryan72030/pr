@@ -33,10 +33,12 @@ class PlanController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'type' => 'required|in:free,paid',
+            'amount' => 'required_if:type,paid|nullable|numeric|min:0',
+            'duration' => 'required|in:monthly,quarterly,half_yearly,yearly',
             'max_employees' => 'required|integer|min:1',
-            'storage_limit' => 'required|string',
-            'price_monthly' => 'required|numeric|min:0',
-            'price_yearly' => 'required|numeric|min:0',
+            'max_services' => 'required|integer|min:1',
         ]);
 
         Plan::create($request->all());
@@ -60,10 +62,12 @@ class PlanController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'type' => 'required|in:free,paid',
+            'amount' => 'required_if:type,paid|nullable|numeric|min:0',
+            'duration' => 'required|in:monthly,quarterly,half_yearly,yearly',
             'max_employees' => 'required|integer|min:1',
-            'storage_limit' => 'required|string',
-            'price_monthly' => 'required|numeric|min:0',
-            'price_yearly' => 'required|numeric|min:0',
+            'max_services' => 'required|integer|min:1',
         ]);
 
         $plan = Plan::findOrFail($id);
@@ -76,7 +80,14 @@ class PlanController extends Controller
         if (!Auth::user()->isAbleTo('manage-plan')) {
             abort(403, 'Unauthorized');
         }
-        Plan::findOrFail($id)->delete();
+        
+        $plan = Plan::findOrFail($id);
+        
+        if ($plan->subscriptions()->where('status', 'active')->exists()) {
+            return redirect()->route('plan.index')->with('error', 'Cannot delete plan with active subscriptions');
+        }
+        
+        $plan->delete();
         return redirect()->route('plan.index')->with('success', 'Plan deleted successfully');
     }
 }

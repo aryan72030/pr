@@ -26,7 +26,7 @@ class SettingStripeController extends Controller
         }
 
         foreach ($request->except('_token') as $key => $value) {
-            Setting::setValue($key, $value, createid());
+            Setting::setValue($key, $value ?? '', createid());
         }
 
         return redirect()->back()->with('success', 'Stripe setting saved successfully');

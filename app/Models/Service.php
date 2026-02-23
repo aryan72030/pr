@@ -14,5 +14,6 @@ class Service extends Model
         'price',
         'status',
         'image',
+        'create_id',
     ];
 }
