@@ -11,11 +11,17 @@ use Carbon\Carbon;
 
 class UserPlanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $plans = Plan::where('is_active', true)->get();
+        // Validate duration input to prevent SQL injection
+        $request->validate([
+            'duration' => 'nullable|in:monthly,quarterly,half_yearly,yearly'
+        ]);
+        
+        $duration = $request->get('duration', 'monthly');
+        $plans = Plan::where('duration', $duration)->get();
         $currentPlan = Auth::user()->plan;
-        return view('user-plan.index', compact('plans', 'currentPlan'));
+        return view('user-plan.index', compact('plans', 'currentPlan', 'duration'));
     }
 
     public function subscribe(Request $request, $planId)
@@ -62,13 +68,24 @@ class UserPlanController extends Controller
     private function createSubscription($user, $plan, $transactionId, $paymentMethod)
     {
         $startDate = Carbon::now();
+        
+
+        //     PlanSubscription::where('user_id', $user->id)
+        // ->where('status', 'active')
+        // ->update([
+        //     'status' => 'expired',
+        //     'end_date' => Carbon::now()
+        // ]);
+
+        // Calculate end date based on plan duration
         $endDate = match($plan->duration) {
-            'monthly' => $startDate->copy()->addDays(23),
-            'quarterly' => $startDate->copy()->addMonthsNoOverflow(3),
-            'half_yearly' => $startDate->copy()->addMonthsNoOverflow(6),
-            'yearly' => $startDate->copy()->addYearNoOverflow(),
+            'monthly' => $startDate->copy()->addDay(23),
+            'quarterly' => $startDate->copy()->addMonths(3),
+            'half_yearly' => $startDate->copy()->addMonths(6),
+            'yearly' => $startDate->copy()->addYear(),
         };
         
+        // Create subscription record
         PlanSubscription::create([
             'user_id' => $user->id,
             'plan_id' => $plan->id,
@@ -81,6 +98,7 @@ class UserPlanController extends Controller
             'status' => 'active',
         ]);
         
+        // Update user's current plan
         $user->update([
             'plan_id' => $plan->id,
             'plan_expiry_date' => $endDate,

@@ -44,7 +44,6 @@
                                             <th>{{ __('Duration') }}</th>
                                             <th>{{ __('Max Employees') }}</th>
                                             <th>{{ __('Max Services') }}</th>
-                                            <th>{{ __('Status') }}</th>
                                             <th>{{ __('Action') }}</th>
                                         </tr>
                                     </thead>
@@ -57,11 +56,6 @@
                                                 <td>{{ ucfirst(str_replace('_', ' ', $plan->duration)) }}</td>
                                                 <td>{{ $plan->max_employees }}</td>
                                                 <td>{{ $plan->max_services }}</td>
-                                                <td>
-                                                    <span class="badge bg-{{ $plan->is_active ? 'success' : 'danger' }}">
-                                                        {{ $plan->is_active ? 'Active' : 'Inactive' }}
-                                                    </span>
-                                                </td>
                                                 <td style="display: flex">
                                                     @permission('edit-plan')
                                                         <a href="{{ route('plan.edit', $plan->id) }}" class="btn btn-gradient-info">

@@ -23,6 +23,23 @@
                 </div>
             </div>
 
+            <div class="text-center mb-4">
+                <ul class="nav nav-pills justify-content-center" id="plan-duration-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link {{ $duration == 'monthly' ? 'active' : '' }}" href="?duration=monthly">{{ __('Monthly') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ $duration == 'quarterly' ? 'active' : '' }}" href="?duration=quarterly">{{ __('Quarterly') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ $duration == 'half_yearly' ? 'active' : '' }}" href="?duration=half_yearly">{{ __('Half Yearly') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ $duration == 'yearly' ? 'active' : '' }}" href="?duration=yearly">{{ __('Yearly') }}</a>
+                    </li>
+                </ul>
+            </div>
+
             @if($currentPlan)
                 <div class="alert alert-info">
                     <strong>Current Plan:</strong> {{ $currentPlan->name }} - {{ $currentPlan->max_employees }} Employees - {{ $currentPlan->max_services }} Services
