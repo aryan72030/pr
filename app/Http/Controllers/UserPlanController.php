@@ -111,13 +111,9 @@ class UserPlanController extends Controller
         return view('user-plan.history', compact('subscriptions'));
     }
 
-    public function invoice($subscriptionId)
+    public function invoice($id)
     {
-        $subscription = PlanSubscription::where('id', $subscriptionId)
-            ->where('user_id', Auth::id())
-            ->with('plan')
-            ->firstOrFail();
-        
+        $subscription = PlanSubscription::where('id', $id)->where('user_id', Auth::id())->with('plan')->firstOrFail();
         return view('user-plan.invoice', compact('subscription'));
     }
 }

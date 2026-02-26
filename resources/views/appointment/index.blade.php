@@ -39,6 +39,7 @@
                                     data-title="{{ __('Create appointment') }}" data-url="{{ route('appointment.create') }}"
                                     data-size="lg"><i class="ti ti-plus"></i></a>
                             @endpermission
+                            <a href="{{ route('appointment.calendar') }}" class="btn btn-sm btn-info" title="{{ __('Calendar View') }}">{{ __('Calendar View') }}</a>
                          </div>
 
                         <div class="card-body table-border-style">

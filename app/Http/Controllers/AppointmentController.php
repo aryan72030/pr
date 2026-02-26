@@ -136,4 +136,16 @@ class AppointmentController extends Controller
         Appointment::where('id', $id)->delete();
         return redirect()->route('appointment.index')->with('success', 'delete successfully');
     }
+
+    public function calendar()
+    {
+        if (!Auth::user()->isAbleTo('manage-appointment')) {
+            abort(403, 'Unauthorized');
+        }
+        $appointments = Auth::user()->hasRole('admin') 
+            ? Appointment::with('staff', 'users')->get() 
+            : Appointment::with('staff', 'users')->where('user_id', Auth::id())->get();
+        
+        return view('appointment.calendar', compact('appointments'));
+    }
 }

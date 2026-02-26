@@ -31,6 +31,7 @@ Route::middleware(['auth', 'check.plan.expiry'])->group(function () {
     Route::resource('service',ServiceController::class);
     Route::resource('staffAvailability',StaffAvailabilityController::class);
     Route::resource('appointment',AppointmentController::class);
+    Route::get('appointment-calendar', [AppointmentController::class, 'calendar'])->name('appointment.calendar');
     Route::resource('plan',PlanController::class);
     Route::resource('email',SettingEmailController::class);
     Route::resource('stripe',SettingStripeController::class);
@@ -42,7 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::post('user/plan/subscribe/{planId}', [UserPlanController::class, 'subscribe']);
     Route::post('user/plan/payment/{planId}', [UserPlanController::class, 'processPayment'])->name('user.plan.payment');
     Route::get('user/plan/history', [UserPlanController::class, 'history'])->name('user.plan.history');
-    Route::get('user/plan/invoice/{subscriptionId}', [UserPlanController::class, 'invoice'])->name('user.plan.invoice');
+    Route::get('user/plan/invoice/{id}', [UserPlanController::class, 'invoice'])->name('user.plan.invoice');
 });
 
 require __DIR__.'/auth.php';

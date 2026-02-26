@@ -18,6 +18,16 @@ class CheckPlanExpiry
         if (auth()->check()) {
             $user = auth()->user();
             
+            // Skip check for admin users
+            if ($user->hasRole('admin')) {
+                return $next($request);
+            }
+            
+            // Skip check for employees (users with create_id set)
+            if ($user->create_id) {
+                return $next($request);
+            }
+            
             // Check if user has no plan
             if (!$user->plan_id) {
                 return redirect()->route('user.plans')->with('error', 'Please subscribe to a plan to access this feature.');
